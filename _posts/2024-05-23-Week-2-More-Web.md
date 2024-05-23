@@ -90,7 +90,7 @@ This one at first appeared to be very strange:
 
 ![Templater](/assets/Templater.jpg)
 
-It took a bit of playing around, but I eventually realized you can submit a key and value pair to make a new "template variable". We can then put the key in the `Use Template Variables` box in the form of `{% raw %} {{key}} {% endraw %}` (this is for the Jinja2 template engine), and we would be taken to another page that rendered the value. 
+It took a bit of playing around, but I eventually realized you can submit a key and value pair to make a new "template variable". We can then put the key in the `Use Template Variables` box in the form of {% raw %} `{{key}}` {% endraw %}` (this is for the Jinja2 template engine), and we would be taken to another page that rendered the value. 
 
 Whenever we write a template in the `Use Template Variables`, we make a POST request to the /template endpoint of the app, and we can then see it rendered. 
 
