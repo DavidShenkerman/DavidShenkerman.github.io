@@ -56,7 +56,7 @@ I entered this: `http://localhost:5000/monitor`, and got the flag:
 
 ![SiteReader](/assets/siteReaderFlag.jpg)
 
-The difference between entering `http://site/monitor` and `http//localhost:5000/monitor` is that the former will cause the server to access the monitor endpoint through the public IP address, and therefore through the internet, like any normal user. The latter, on the other hand, tells the server to access the monitor endpoint within its internal network, through localhost. Usually, SSRF challenges would have some kind of sanitization in what we input, but this one seems to be evsimpler. 
+The difference between entering `http://site/monitor` and `http//localhost:5000/monitor` is that the former will cause the server to access the monitor endpoint through the public IP address, and therefore through the internet, like any normal user. The latter, on the other hand, tells the server to access the monitor endpoint within its internal network, through localhost. Usually, SSRF challenges would have some kind of sanitization in what we input, but this one seems to be simpler. 
 
 ## FETCHER
 
