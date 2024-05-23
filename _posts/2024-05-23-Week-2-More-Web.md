@@ -90,7 +90,7 @@ This one at first appeared to be very strange:
 
 ![Templater](/assets/Templater.jpg)
 
-It took a bit of playing around, but I eventually realized you can submit a key and value pair to make a new "template variable". We can then put the key in the `Use Template Variables` box in the form of {% raw %} `{{key}}` {% endraw %}` (this is for the Jinja2 template engine), and we would be taken to another page that rendered the value. 
+It took a bit of playing around, but I eventually realized you can submit a key and value pair to make a new "template variable". We can then put the key in the `Use Template Variables` box in the form of {% raw %} `{{key}}` {% endraw %} (this is for the Jinja2 template engine), and we would be taken to another page that rendered the value. 
 
 Whenever we write a template in the `Use Template Variables`, we make a POST request to the /template endpoint of the app, and we can then see it rendered. 
 
@@ -107,7 +107,7 @@ template_keys = {
 
 }
 ```
-Just POSTing the data `{% raw %} {{flag}} {% endraw %}` won't work, because of this code:
+Just POSTing the data {% raw %} `{{flag}}` {% endraw %} won't work, because of this code:
 ```python
 app.route('/template', methods=['POST'])
 def template_route():
@@ -196,11 +196,11 @@ def post_playlist():
         return "Internal server error", 500
 ```
 
-However, as you can see in the above code, it is only checking to see if we put curly brackets in the `text` field. In other words, the username field is completely unsanitized. I tried POSTing the common payload to test for SSTI `{% raw %} {{7*7}} {% endraw %}` in the username field, and sure enough: 
+However, as you can see in the above code, it is only checking to see if we put curly brackets in the `text` field. In other words, the username field is completely unsanitized. I tried POSTing the common payload to test for SSTI {% raw %} `{{7*7}}` {% endraw %} in the username field, and sure enough: 
 
 ![SSTI Proof](/assets/SSTIProof.jpg)
 
-You can see that the order is for 49 instead of `{% raw %} {{7*7}} {% endraw %}`, meaning that the server executed the code within our template. With the power of template engines, we can actually open and modify files through these injections. By checking the source files the CTF provides us with, we can see that there is a flag.txt file in the server.
+You can see that the order is for 49 instead of {% raw %} `{{7*7}}` {% endraw %}, meaning that the server executed the code within our template. With the power of template engines, we can actually open and modify files through these injections. By checking the source files the CTF provides us with, we can see that there is a flag.txt file in the server.
 
 From here, we simply need to craft a payload that opens this file, and we can get the flag. My jinja2 knowledge is somewhat limited, so I used the help of this handy cheatsheet of sorts [HackTricks SSTI Payloads](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/jinja2-ssti) to form the payload we needed: 
 
