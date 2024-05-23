@@ -182,7 +182,7 @@ def post_playlist():
         text = request.form["text"]
         if len(text) > 10_000:
             return "Too much!", 406
-        if "{{" in text or "}}" in text:
+        if "{% raw %}{{{% endraw %}" in text or "{% raw %}}}{% endraw %}" in text:
             return "Nice try!", 406
         text = [line.split(",") for line in text.splitlines()]
         text = [line[:4] + ["?"] * (4 - min(len(line), 4)) for line in text]
