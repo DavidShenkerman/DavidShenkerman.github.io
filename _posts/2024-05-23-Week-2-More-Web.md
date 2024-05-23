@@ -77,7 +77,7 @@ There is also a flag endpoint with some interesting code:
  ```
 If we make a request to the /flag endpoint normally, it will check if we are doing it server side or client side. If we do it client side, it just shows the text “bad ip”. However, we can’t simply make a request with localhost in the url like in the last challenge, because the app is now sanitizing our URLs. My first thought was to make our own webserver with a normal URL that would return the HTTP redirect code to localhost/flag. When the server would make a request to our server, it would bounce back, check the flag endpoint through localhost, and bypass the check. However, this wasn't working for some reason. 
 
-I then noticed that the filter doesn't check for IPv6 addresses, and got the idea to submit the IPv6 version of localhost. I found how to put this in URL form in this article: [Stack Overflow IPv6](https://stackoverflow.com/questions/40189084/what-is-ipv6-for-localhost-and-0-0-0-0), and submitted this: 
+I then noticed that the filter doesn't check for IPv6 addresses, and got the idea to submit the IPv6 version of localhost. I found how to put this in URL form in this article, [Stack Overflow IPv6](https://stackoverflow.com/questions/40189084/what-is-ipv6-for-localhost-and-0-0-0-0), and submitted this: 
 `http://[::1]:3000/flag`
 
 We then can see the flag: ![fetcherFlag](/assets/fetcherFlag.jpg)
@@ -153,9 +153,9 @@ So to recap the process, let's say we POST `{% raw %}{{title}}{% endraw %}`, fro
 
 What could go wrong here? It all lies in the second if statement in the template method - it displays a potential key without any filters. After some playing around, the proper data to post to get the flag is `{% raw %}{{{{{% endraw %}flag{% raw %}}}}}{% endraw %}`. 
 
-When this string is eventually passed to the template method, a match would be found. However, with the way the regex is formatted, it actually finds the match in the innermost part of the string. In other words, the match is found like this: {% raw %}{{{% endraw %}**{{flag}}**{% raw %}}}{% endraw %}, and m is a matching object that is ONLY `{% raw %}{{flag}}{% endraw %}`. When we slice off the curly brackets and do the check, it passes, because `flag` is in the dictionary.
+When this string is eventually passed to the template method, a match would be found. However, with the way the regex is formatted, it actually finds the match in the innermost part of the string. In other words, the match is found like this: {% raw %}{{{% endraw %}<b>{{flag}}<b>{% raw %}}}{% endraw %}, and m is a matching object that is ONLY `{% raw %}{{flag}}{% endraw %}`. When we slice off the curly brackets and do the check, it passes, because `flag` is in the dictionary.
 
-s is then replaced with the actual flag. This is the cool part. We know all flags for this CTF are in the form tjctf{}. When we do `s.replace()`, we are only replacing the `m.group(1)` portion of the posted data with the value. To show it more clearly, the bold data is what is being replaced: {{**{{flag}}**}}. 
+s is then replaced with the actual flag. This is the cool part. We know all flags for this CTF are in the form tjctf{}. When we do `s.replace()`, we are only replacing the `m.group(1)` portion of the posted data with the value. To show it more clearly, the bold data is what is being replaced: {% raw %}{{{% endraw %}<b>{% raw %}{{{% endraw %}flag{% raw %}}}{% endraw %}**<b>{% raw %}}}{% endraw %}. 
 
 This means that on the next iteration, s is now `{% raw %}{{tjctf{UNKNOWN FLAG}}{% endraw %}}`. A match is found here, and the key variable is now set to `tjctf{UNKNOWN FLAG}` However, the actual flag is NOT a key in the dictionary - only the word `flag` was. The if statement then fails, and we get that nifty error message of the key not being found, which actually displays the flag: 
 
