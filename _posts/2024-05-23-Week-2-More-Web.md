@@ -90,9 +90,9 @@ This one at first appeared to be very strange:
 
 ![Templater](/assets/Templater.jpg)
 
-It took a bit of playing around, but I eventually realized you can submit a key and value pair to make a new "template variable". We can then put the key in the `Use Template Variables` box in the form of {{key}} (this is for the Jinja2 template engine), and we are taken to another page that rendered the value. 
+It took a bit of playing around, but I eventually realized you can submit a key and value pair to make a new "template variable". We can then put the key in the `Use Template Variables` box in the form of `{% raw %} {{key}} {% endraw %}` (this is for the Jinja2 template engine), and we would be taken to another page that rendered the value. 
 
-Whenever we write a template in the `Use Template Variables` box, we make a POST request to the /template endpoint of the app, and we can then see it rendered. 
+Whenever we write a template in the `Use Template Variables`, we make a POST request to the /template endpoint of the app, and we can then see it rendered. 
 
 When I looked at the source code, I found this: 
 
@@ -102,12 +102,12 @@ flag = open('flag.txt').read().strip()
 template_keys = {
     'flag': flag,
     'title': 'my website',
-    'content': 'Hello, {{name}}!',
+    'content': 'Hello, {% raw %} {{name}}! {% endraw %}',
     'name': 'player'
 
 }
 ```
-Just POSTing the data {{flag}} won't work, because of this code:
+Just POSTing the data `{% raw %} {{flag}} {% endraw %}` won't work, because of this code:
 ```python
 app.route('/template', methods=['POST'])
 def template_route():
@@ -127,7 +127,7 @@ However, notice the `template` method that `template_route()` calls:
 ```python
 def template(s): 
     while True:
-        m = re.match(r'.*(\{\{.+?\}\}).*', s, re.DOTALL)
+        m = re.match(r'.*({% raw %}{{.+?}}{% endraw %}).*', s, re.DOTALL)
         if not m:
             break
 
@@ -141,23 +141,23 @@ def template(s):
     return s, 200
 ```
 
-Let's break this down. the `re.match(r'.*(\{\{.+?\}\}).*', s, re.DOTALL)` checks to find an occurence of {{some text here}} within the s string we pass into the template. The s string is whatever data we posted. If we don't find this occurence, we break out of the loop and return the original posted data without any changes.
+Let's break this down. the `re.match(r'.*({% raw %}{{.+?}}{% endraw %}).*', s, re.DOTALL)` checks to find an occurence of `{% raw %}{{some text here}}{% endraw %}` within the s string we pass into the template. The s string is whatever data we posted. If we don't find this occurence, we break out of the loop and return the original posted data without any changes.
 
-However, if it was found, a key variable is created, and it is essentially passed whatever we posted, but with the curly brackets sliced off. In other words, key = some text here, if we posted {{some text here}}. 
+However, if it was found, a key variable is created, and it is essentially passed whatever we posted, but with the curly brackets sliced off. In other words, `key = some text here`, if we posted `{% raw %}{{some text here}}{% endraw %}`. 
 
 The next line is crucial to our exploit. At this point, it checks to see if the key variable is in the template_keys dictionary. If it isn't, it returns whatever the key value currently is, saying that it wasn't found. We'll come back to this in a second.
 
 Finally, s is now changed to the value of whatever key we posted. 
 
-So to recap the process, let's say we POST {{title}}, from the dictionary I put up before. An occurence would be found. The key variable would then be set to `title`. The if statement would not be true, so s would become the value for title, which is `my website`. On the next iteration of the loop,no match would be found, and s would be returned. Finally, `my website` is compared to whatever the flag is (the flag of course is not in it), and it is rendered. 
+So to recap the process, let's say we POST `{% raw %}{{title}}{% endraw %}`, from the dictionary I put up before. An occurence would be found. The key variable would then be set to `title`. The if statement would not be true, so s would become the value for title, which is `my website`. On the next iteration of the loop,no match would be found, and s would be returned. Finally, `my website` is compared to whatever the flag is (the flag of course is not in it), and it is rendered. 
 
-What could go wrong here? It all lies in the second if statement in the template method - it displays a potential key without any filters. After some playing around, the proper data to post to get the flag is `\{\{\{\{flag\}\}\}\}`. 
+What could go wrong here? It all lies in the second if statement in the template method - it displays a potential key without any filters. After some playing around, the proper data to post to get the flag is `{% raw %}{{{{{% endraw %}flag{% raw %}}}}}{% endraw %}`. 
 
-When this string is eventually passed to the template method, a match would be found. However, with the way the regex is formatted, it actually finds the match in the innermost part of the string. In other words, the match is found like this: {{**{{flag}}**}}, and m is a matching object that is ONLY {{flag}}. When we slice off the curly brackets and do the check, it passes, because `flag` is in the dictionary.
+When this string is eventually passed to the template method, a match would be found. However, with the way the regex is formatted, it actually finds the match in the innermost part of the string. In other words, the match is found like this: {% raw %}{{{% endraw %}**{{flag}}**{% raw %}}}{% endraw %}, and m is a matching object that is ONLY `{% raw %}{{flag}}{% endraw %}`. When we slice off the curly brackets and do the check, it passes, because `flag` is in the dictionary.
 
 s is then replaced with the actual flag. This is the cool part. We know all flags for this CTF are in the form tjctf{}. When we do `s.replace()`, we are only replacing the `m.group(1)` portion of the posted data with the value. To show it more clearly, the bold data is what is being replaced: {{**{{flag}}**}}. 
 
-This means that on the next iteration, s is now {{tjctf{UNKNOWN FLAG}}}. A match is found here, and the key variable is now set to tjctf{UNKNOWN FLAG. However, the actual flag is NOT a key in the dictionary - only the word `flag` was. The if statement then fails, and we get that nifty error message of the key not being found, which actually displays the flag: 
+This means that on the next iteration, s is now `{% raw %}{{tjctf{UNKNOWN FLAG}}{% endraw %}}`. A match is found here, and the key variable is now set to `tjctf{UNKNOWN FLAG}` However, the actual flag is NOT a key in the dictionary - only the word `flag` was. The if statement then fails, and we get that nifty error message of the key not being found, which actually displays the flag: 
 
 ![templateFlag](/assets/templaterSolve.jpg)
 
@@ -196,15 +196,15 @@ def post_playlist():
         return "Internal server error", 500
 ```
 
-However, as you can see in the above code, it is only checking to see if we put curly brackets in the `text` field. In other words, the username field is completely unsanitized. I tried POSTing the common payload to test for SSTI `{{7*7}}` in the username field, and sure enough: 
+However, as you can see in the above code, it is only checking to see if we put curly brackets in the `text` field. In other words, the username field is completely unsanitized. I tried POSTing the common payload to test for SSTI `{% raw %} {{7*7}} {% endraw %}` in the username field, and sure enough: 
 
 ![SSTI Proof](/assets/SSTIProof.jpg)
 
-You can see that the order is for 49 instead of `{{7*7}}`, meaning that the server executed the code within our template. With the power of template engines, we can actually open and modify files through these injections. By checking the source files the CTF provides us with, we can see that there is a flag.txt file in the server.
+You can see that the order is for 49 instead of `{% raw %} {{7*7}} {% endraw %}`, meaning that the server executed the code within our template. With the power of template engines, we can actually open and modify files through these injections. By checking the source files the CTF provides us with, we can see that there is a flag.txt file in the server.
 
 From here, we simply need to craft a payload that opens this file, and we can get the flag. My jinja2 knowledge is somewhat limited, so I used the help of this handy cheatsheet of sorts [HackTricks SSTI Payloads](https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection/jinja2-ssti) to form the payload we needed: 
 
-`{{ request.__class__._load_form_data.__globals__.__builtins__.open("flag.txt").read() }}`
+`` {% raw %} {{ request.__class__._load_form_data.__globals__.__builtins__.open("flag.txt").read() }} {% endraw %}``
 
 When we submit this to the username field, we get the flag: 
 
