@@ -153,7 +153,7 @@ So to recap the process, let's say we POST `{% raw %}{{title}}{% endraw %}`, fro
 
 What could go wrong here? It all lies in the second if statement in the template method - it displays a potential key without any filters. After some playing around, the proper data to post to get the flag is `{% raw %}{{{{{% endraw %}flag{% raw %}}}}}{% endraw %}`. 
 
-When this string is eventually passed to the template method, a match would be found. However, with the way the regex is formatted, it actually finds the match in the innermost part of the string. In other words, the match is found like this: {% raw %}{{{% endraw %}<b>{{flag}}</b>{% raw %}}}{% endraw %}, and m is a matching object that is ONLY `{% raw %}{{flag}}{% endraw %}`. When we slice off the curly brackets and do the check, it passes, because `flag` is in the dictionary.
+When this string is eventually passed to the template method, a match would be found. However, with the way the regex is formatted, it actually finds the match in the innermost part of the string. In other words, the match is found like this: {% raw %}{{{% endraw %}<b>{% raw %}{{{% endraw %}flag{% raw %}}}{% endraw %}</b>{% raw %}}}{% endraw %}, and m is a matching object that is ONLY `{% raw %}{{flag}}{% endraw %}`. When we slice off the curly brackets and do the check, it passes, because `flag` is in the dictionary.
 
 s is then replaced with the actual flag. This is the cool part. We know all flags for this CTF are in the form tjctf{}. When we do `s.replace()`, we are only replacing the `m.group(1)` portion of the posted data with the value. To show it more clearly, the bold data is what is being replaced: {% raw %}{{{% endraw %}<b>{% raw %}{{{% endraw %}flag{% raw %}}}{% endraw %}</b>{% raw %}}}{% endraw %}. 
 
