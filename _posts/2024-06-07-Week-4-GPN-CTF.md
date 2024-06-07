@@ -99,7 +99,7 @@ GPNCTF{1_4M_50_C0NFU53D_R1GHT_N0W}
  hail admin what can I get you GPNCTF{1_4M_50_C0NFU53D_R1GHT_N0W}%  
 ```
 
-For the first web challenge of the CTF, I found this one to be quite hard. But it was still fun, and with its PHP quirks, reminded me a bit of last week's ["Simple Calculator" Challenge](https://davidshenkerman.github.io/ctfs/2024/06/02/Week-3-Angstrom-and-L3ak.html)
+For the first web challenge of the CTF, I found this one to be quite hard. But it was still fun, and with its PHP quirks, reminded me a bit of last week's ["Simple Calculator" Challenge](https://davidshenkerman.github.io/ctfs/2024/06/02/Week-3-Angstrom-and-L3ak.html).
 
 
 ## TODO (WEB)
