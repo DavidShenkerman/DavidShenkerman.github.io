@@ -109,9 +109,9 @@ After running this code, I could type in the input box. From there, I just typed
 
 The webapp here is basically a picture of a cookie. We can click it which increments a counter, and in order to get the flag, we have to click it 1e20 times. I don't think even the best cookie clicker players can get that manually.
 
-The server used a websocket and some weird calcuations with exponents and Math.random() to make sure that the client is synchronous with it. Essentially, this made it hard for us to just make a script that made many requests. 
+The server used a websocket and some weird calculations with exponents and Math.random() to make sure that the client is synchronous with it. Essentially, this made it hard for us to just make a script that made many requests. 
 
-However, this is basically what I ended up doing: writing a script that connected to the websocket, and sent it massive numbers thousands of times. Due to the insychronous nature of both ends using Math.Random(), there were some delays. However, I did get this script to work: 
+However, this is basically what I ended up doing: writing a script that connected to the websocket, and sent it massive numbers thousands of times. Due to the asychronous nature of both ends using Math.Random(), there were some delays. However, I did get this script to work: 
 
 ```Javascript
 const io = require('socket.io-client');
@@ -133,7 +133,7 @@ socket.on('connect', () => {
         currentValue += Math.floor(Math.random() * 1000000) + 1;
 
 
-        socket.on('recievedScore', (msg) => {
+        socket.on('receivedScore', (msg) => {
             let data = JSON.parse(msg);
             console.log(`Current Score: ${data.value}`);
             console.log('clickCount: ' + i)
