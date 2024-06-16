@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "The Summer of Challs: Week 5"
-date: 2024-06-016
+date: 2024-06-16
 categories: CTFs
 ---
 
@@ -163,6 +163,3 @@ I ran it and got the flag in the terminal:
 I'm not sure if this was the most efficient or intended way of solving this, but it got me the flag!
 
 I would say that these challenges weren't exactly my favorite, but they helped iron out javascript skills a bit. The web grind continues this week! 
-
-
-
