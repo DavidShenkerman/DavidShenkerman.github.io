@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The Summer of Challs: Week 7"
+title: "The Summer of Challs: Week 8"
 date: 2024-06-23
 categories: CTFs
 ---
