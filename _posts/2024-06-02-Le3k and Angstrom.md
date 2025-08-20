@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "L3ak and Angstrom"
+title: "L3ak and AngstromCTF"
 date: 2024-06-02
 categories: CTFs
 ---
