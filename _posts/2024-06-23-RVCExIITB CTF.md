@@ -1,11 +1,11 @@
 ---
 layout: post
-title: "The Summer of Challs: Week 6"
+title: "RVCExIITB CTF"
 date: 2024-06-23
 categories: CTFs
 ---
 
-This week, I solved some easy web challenges from the RVCExIITB CTF. 
+This week, I solved some web challenges from the RVCExIITB CTF. 
 
 ## ROBOT UPRISING
 

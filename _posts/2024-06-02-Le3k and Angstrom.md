@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "The Summer of Challs: Week 3"
+title: "L3ak and Angstrom"
 date: 2024-06-02
 categories: CTFs
 ---
